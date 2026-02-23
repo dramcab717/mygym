@@ -1,16 +1,16 @@
 import 'package:flutter/material.dart';
-import 'screens/splash_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'firebase_options.dart';
-
+import 'routes/app_routes.dart';
 
 void main() async {
-    	WidgetsFlutterBinding.ensureInitialized();
-  	await Firebase.initializeApp(
-    	options: DefaultFirebaseOptions.currentPlatform,
-  );
+  // Garantiza que los plugins nativos (como Firebase) se inicialicen correctamente
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Inicialización de Firebase
+  await Firebase.initializeApp();
+
   runApp(const MyApp());
-}	
+}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -18,15 +18,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'MyGym',
+      debugShowCheckedModeBanner: false, // Oculta la etiqueta "DEBUG"
+      title: 'My Gym',
+
+      // Tema visual global de la aplicación
       theme: ThemeData(
-        primaryColor: Colors.red,
-        colorScheme: ColorScheme.fromSwatch(primarySwatch: Colors.red),
+        brightness: Brightness.dark,
+        primaryColor: Colors.redAccent,
         scaffoldBackgroundColor: Colors.black,
-        fontFamily: 'Montserrat', 
+        useMaterial3: true,
       ),
-      home: const SplashScreen(),
+
+      // Aplicamos el sistema de rutas exigido por el profesor
+      initialRoute: AppRoutes.initialRoute,
+      routes: AppRoutes.getRoutes(),
     );
   }
 }

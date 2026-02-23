@@ -1,7 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
-import 'package:google_fonts/google_fonts.dart';
-import 'login_screen.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -10,32 +7,18 @@ class SplashScreen extends StatefulWidget {
   State<SplashScreen> createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _controller;
-  late Animation<double> _animation;
-
+class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-
-    _controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 2));
-    _animation = Tween<double>(begin: 0, end: 1).animate(_controller);
-    _controller.forward();
-
-    Timer(const Duration(seconds: 4), () {
-      if (mounted) {
-        Navigator.of(context).pushReplacement(
-            MaterialPageRoute(builder: (_) => const LoginScreen()));
-      }
-    });
+    _goToLogin();
   }
 
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
+  void _goToLogin() async {
+    await Future.delayed(const Duration(seconds: 3));
+    if (mounted) {
+      Navigator.pushReplacementNamed(context, 'login');
+    }
   }
 
   @override
@@ -46,48 +29,24 @@ class _SplashScreenState extends State<SplashScreen>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            FadeTransition(
-              opacity: _animation,
-              child: Image.asset(
-                'assets/images/logo.jpg', 
-                width: 180,
-                height: 180,
+            // Logo
+            Image.asset('assets/images/logo.jpg', height: 150),
+
+            const SizedBox(height: 20), // Espacio
+            const Text(
+              'MY GYM',
+              style: TextStyle(
+                fontSize: 36,
+                fontWeight: FontWeight.bold,
+                color: Colors.redAccent,
+                letterSpacing:
+                    3, // Separo un poco las letras para que quede elegante
               ),
             ),
-            const SizedBox(height: 20),
-            FadeTransition(
-              opacity: _animation,
-              child: Text(
-                'MyGym',
-                style: GoogleFonts.pressStart2p( 
-                  textStyle: const TextStyle(
-                    fontSize: 28,
-                    color: Colors.red,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 10),
-            FadeTransition(
-              opacity: _animation,
-              child: Text(
-                'Tu progreso, tu ritmo',
-                style: GoogleFonts.robotoMono(
-                  textStyle: const TextStyle(
-                    fontSize: 16,
-                    color: Colors.redAccent,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 30),
-            FadeTransition(
-              opacity: _animation,
-              child: const CircularProgressIndicator(
-                color: Colors.red,
-                strokeWidth: 3,
-              ),
-            ),
+
+            const SizedBox(height: 40),
+            // Ruedita de carga
+            const CircularProgressIndicator(color: Colors.redAccent),
           ],
         ),
       ),

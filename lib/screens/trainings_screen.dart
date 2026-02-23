@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'add_training_screen.dart';
-import '../db/database_helper.dart'; // Asegúrate de que esta ruta es correcta
+import '../db/database_helper.dart';
 
 class TrainingsScreen extends StatefulWidget {
   const TrainingsScreen({super.key});
@@ -16,10 +16,10 @@ class _TrainingsScreenState extends State<TrainingsScreen> {
   @override
   void initState() {
     super.initState();
-    _refreshTrainings(); // Cargar datos al iniciar la pantalla
+    _refreshTrainings();
   }
 
-  // Función para leer la base de datos y actualizar la lista
+  // Consulta a SQLite para obtener todos los entrenamientos guardados
   Future<void> _refreshTrainings() async {
     setState(() => _isLoading = true);
     final data = await DatabaseHelper.instance.readAllTrainings();
@@ -29,17 +29,16 @@ class _TrainingsScreenState extends State<TrainingsScreen> {
     });
   }
 
-  // Navegar a la pantalla de añadir y recargar al volver
+  // Navega al formulario y actualiza la lista automáticamente al volver
   Future<void> _goToAddTraining() async {
     await Navigator.push(
       context,
       MaterialPageRoute(builder: (_) => const AddTrainingScreen()),
     );
-    // Al volver de la pantalla de añadir, recargamos la lista
     _refreshTrainings();
   }
 
-  // Borrar un entrenamiento específico
+  // Elimina un registro de la base de datos por su ID
   void _deleteTraining(int id) async {
     await DatabaseHelper.instance.deleteTraining(id);
     _refreshTrainings();
@@ -49,24 +48,33 @@ class _TrainingsScreenState extends State<TrainingsScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
+      // AppBar adaptada a los colores del resto de la aplicación
       appBar: AppBar(
-        title: const Text('Mis entrenamientos'),
-        backgroundColor: Colors.redAccent,
+        title: const Text(
+          'Mis Entrenamientos',
+          style: TextStyle(
+            color: Colors.redAccent,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Colors.black,
       ),
+      // Botón flotante para añadir nuevos registros
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.redAccent,
         onPressed: _goToAddTraining,
         child: const Icon(Icons.add, color: Colors.black),
       ),
+      // Árbol de decisiones: Cargando -> Vacío -> Lista con datos
       body: _isLoading
           ? const Center(
               child: CircularProgressIndicator(color: Colors.redAccent),
             )
           : _trainings.isEmpty
-          ? Center(
+          ? const Center(
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: const [
+                children: [
                   Icon(Icons.fitness_center, size: 60, color: Colors.grey),
                   SizedBox(height: 20),
                   Text(
@@ -108,8 +116,9 @@ class _TrainingsScreenState extends State<TrainingsScreen> {
                       '${t['sets']} series x ${t['reps']} reps @ ${t['weight']} kg',
                       style: const TextStyle(color: Colors.white70),
                     ),
+                    // Botón de papelera para borrar el registro
                     trailing: IconButton(
-                      icon: const Icon(Icons.delete, color: Colors.red),
+                      icon: const Icon(Icons.delete, color: Colors.redAccent),
                       onPressed: () => _deleteTraining(t['id']),
                     ),
                   ),

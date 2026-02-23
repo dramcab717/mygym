@@ -1,17 +1,10 @@
 import 'package:flutter/material.dart';
-
-// Importamos tus pantallas
-import 'screens/home_screen.dart';
-import 'screens/trainings_screen.dart';
-import 'screens/exercises_screen.dart';
-import 'screens/stats_screen.dart';
-import 'screens/credits_screen.dart';
+import '../screens/screens.dart'; // Importamos todas las pantallas de golpe
 
 class MainNavigation extends StatefulWidget {
-  // Tema 4: Paso de parámetros (página 25 del PDF 4)
+  // Parámetro para elegir en qué pestaña arranca la app
   final int initialIndex;
 
-  // Por defecto es 0 (Home), pero si le pasamos otro número, arrancará ahí
   const MainNavigation({super.key, this.initialIndex = 0});
 
   @override
@@ -21,22 +14,23 @@ class MainNavigation extends StatefulWidget {
 class _MainNavigationState extends State<MainNavigation> {
   int _selectedIndex = 0;
 
-  // Lista de pantallas (Ordenadas como en la barra de abajo)
-  final List<Widget> _screens = [
-    const HomeScreen(), // Índice 0
-    const TrainingsScreen(), // Índice 1
-    const ExercisesScreen(), // Índice 2 (Aquí queremos llegar)
-    const StatsScreen(), // Índice 3
-    const CreditsScreen(), // Índice 4
+  // Lista con las pantallas en el orden exacto del menú inferior
+  final List<Widget> _screens = const [
+    HomeScreen(), // Índice 0
+    TrainingsScreen(), // Índice 1
+    ExercisesScreen(), // Índice 2
+    StatsScreen(), // Índice 3
+    CreditsScreen(), // Índice 4
   ];
 
   @override
   void initState() {
     super.initState();
-    // Al iniciar, le decimos que el índice sea el que hemos pasado por parámetro
+    // Asignamos la pestaña inicial recibida al arrancar
     _selectedIndex = widget.initialIndex;
   }
 
+  // Función que actualiza la pantalla al tocar un icono del menú
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -46,9 +40,13 @@ class _MainNavigationState extends State<MainNavigation> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // Muestra la pantalla correspondiente al índice seleccionado
       body: _screens[_selectedIndex],
+
+      // Barra de navegación nativa de Flutter
       bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
+        type:
+            BottomNavigationBarType.fixed, // Evita animaciones raras al pulsar
         currentIndex: _selectedIndex,
         onTap: _onItemTapped,
         backgroundColor: Colors.black,

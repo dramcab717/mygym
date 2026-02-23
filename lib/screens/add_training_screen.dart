@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../db/database_helper.dart'; // Importamos la base de datos
+import '../db/database_helper.dart';
 
 class AddTrainingScreen extends StatefulWidget {
   const AddTrainingScreen({super.key});
@@ -9,60 +9,64 @@ class AddTrainingScreen extends StatefulWidget {
 }
 
 class _AddTrainingScreenState extends State<AddTrainingScreen> {
+  // Controladores para capturar los datos del formulario
   final TextEditingController _exerciseController = TextEditingController();
   final TextEditingController _setsController = TextEditingController();
   final TextEditingController _repsController = TextEditingController();
   final TextEditingController _weightController = TextEditingController();
 
-  // Función corregida para guardar en SQLite
+  // Valida y guarda el registro en la base de datos local SQLite
   void _saveTraining() async {
     final String exercise = _exerciseController.text.trim();
     final int sets = int.tryParse(_setsController.text) ?? 0;
     final int reps = int.tryParse(_repsController.text) ?? 0;
     final double weight = double.tryParse(_weightController.text) ?? 0;
 
-    // Validamos que los datos sean correctos
+    // Validación de campos obligatorios
     if (exercise.isEmpty || sets <= 0 || reps <= 0) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
-          content: Text('Rellena todos los campos correctamente'),
+          content: Text('Por favor, rellena todos los campos correctamente.'),
           backgroundColor: Colors.redAccent,
         ),
       );
       return;
     }
 
-    // Creamos el objeto para guardar
+    // Construcción del mapa de datos para SQLite
     final newTraining = {
       'exercise': exercise,
       'sets': sets,
       'reps': reps,
       'weight': weight,
-      'date': DateTime.now().toIso8601String(), // Guardamos la fecha actual
+      'date': DateTime.now().toIso8601String(), // Timestamp automático
     };
 
-    // GUARDAMOS EN LA BASE DE DATOS
+    // Inserción asíncrona en la base de datos
     await DatabaseHelper.instance.createTraining(newTraining);
 
-    // Comprobamos si la pantalla sigue abierta antes de usar el contexto
+    // Prevención de fugas de memoria si el usuario cierra la pantalla antes de terminar
     if (!mounted) return;
 
-    // Volvemos a la pantalla anterior devolviendo 'true' (significa "hemos guardado algo")
+    // Retorna a la pantalla anterior enviando 'true' para forzar la recarga de la lista
     Navigator.pop(context, true);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         title: const Text(
-          'Añadir entrenamiento',
-          style: TextStyle(color: Colors.white),
+          'Añadir Entrenamiento',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
         ),
         backgroundColor: Colors.black,
-        iconTheme: const IconThemeData(color: Colors.redAccent), // Flecha roja
+        iconTheme: const IconThemeData(
+          color: Colors.redAccent,
+        ), // Color de la flecha de retroceso
       ),
-      backgroundColor: Colors.black,
+      // SingleChildScrollView evita errores de desbordamiento al abrir el teclado
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -79,6 +83,7 @@ class _AddTrainingScreenState extends State<AddTrainingScreen> {
             ),
             const SizedBox(height: 30),
 
+            // Uso de un método modular para generar los TextFields dinámicamente
             _buildTextField(
               controller: _exerciseController,
               label: 'Ejercicio',
@@ -112,6 +117,7 @@ class _AddTrainingScreenState extends State<AddTrainingScreen> {
             ),
             const SizedBox(height: 30),
 
+            // Botón de guardado
             ElevatedButton(
               onPressed: _saveTraining,
               style: ElevatedButton.styleFrom(
@@ -137,6 +143,7 @@ class _AddTrainingScreenState extends State<AddTrainingScreen> {
     );
   }
 
+  // Método modular para construir TextFields personalizados
   Widget _buildTextField({
     required TextEditingController controller,
     required String label,
@@ -146,7 +153,7 @@ class _AddTrainingScreenState extends State<AddTrainingScreen> {
     return TextField(
       controller: controller,
       keyboardType: keyboardType,
-      style: const TextStyle(color: Colors.white), // Texto blanco al escribir
+      style: const TextStyle(color: Colors.white),
       cursorColor: Colors.redAccent,
       decoration: InputDecoration(
         labelText: label,

@@ -1,55 +1,73 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
+// Usamos StatelessWidget porque es una pantalla estática (no cambian los datos)
 class CreditsScreen extends StatelessWidget {
   const CreditsScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Scaffold
     return Scaffold(
-      backgroundColor: Colors.black,
+      backgroundColor: Colors.black, // Fondo oscuro para mantener el estilo
       appBar: AppBar(
-        title: Text(
+        title: const Text(
           'Créditos',
-          style: GoogleFonts.pressStart2p(color: Colors.red),
+          style: TextStyle(
+            color: Colors.redAccent,
+            fontWeight: FontWeight.bold,
+          ),
         ),
         backgroundColor: Colors.black,
         centerTitle: true,
-        elevation: 0,
+        elevation: 0, // Quitamos la sombra de la barra superior
       ),
-      body: Center(
+      // Centramos todo el contenido en medio de la pantalla
+      body: const Center(
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          mainAxisSize: MainAxisSize
+              .min, // La columna ocupa solo el espacio de sus textos
           children: [
+            // Título 1
             Text(
               'Programación de Móviles:',
-              style: GoogleFonts.pressStart2p(color: Colors.red, fontSize: 12),
+              style: TextStyle(
+                color: Colors.redAccent,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10), // Espacio en blanco
+            // Texto 1
             Text(
               'Daniel Ramírez Cabello.',
-              style: GoogleFonts.pressStart2p(
-                color: Colors.white,
-                fontSize: 14,
-              ),
+              style: TextStyle(color: Colors.white, fontSize: 18),
             ),
-            const SizedBox(height: 30),
+
+            SizedBox(height: 40),
+
+            // Título 2
             Text(
               'Profesor guía:',
-              style: GoogleFonts.pressStart2p(color: Colors.red, fontSize: 12),
-            ),
-            const SizedBox(height: 10),
-            Text(
-              'Francis.',
-              style: GoogleFonts.pressStart2p(
-                color: Colors.white,
-                fontSize: 14,
+              style: TextStyle(
+                color: Colors.redAccent,
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 30),
+            SizedBox(height: 10),
+
+            // Texto 2
+            Text(
+              'Francis.',
+              style: TextStyle(color: Colors.white, fontSize: 18),
+            ),
+
+            SizedBox(height: 40),
+
+            // Copyright
             Text(
               '© 2026 MyGym App',
-              style: GoogleFonts.pressStart2p(color: Colors.red, fontSize: 10),
+              style: TextStyle(color: Colors.grey, fontSize: 14),
             ),
           ],
         ),
