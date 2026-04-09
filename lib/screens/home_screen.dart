@@ -49,7 +49,7 @@ class HomeScreen extends StatelessWidget {
             mainAxisAlignment:
                 MainAxisAlignment.center, // Centra los elementos verticalmente
             children: [
-              // Imagen de portada o logo
+              // Imagen 
               ClipRRect(
                 borderRadius: BorderRadius.circular(
                   15,

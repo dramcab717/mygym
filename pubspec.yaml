@@ -28,7 +28,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/images/logo.jpg
-    - assets/images/fitness-train-male-strong-power.jpg
 
 flutter_launcher_icons:
   android: true
